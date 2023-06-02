@@ -16,7 +16,6 @@ export class UserService {
     const user = await this.findUserByEmail(createUserDto.email).catch(
       () => undefined,
     );
-
     const saltOrRounds = 10;
     const passwordHashed = await hash(createUserDto.password, saltOrRounds);
 
@@ -50,7 +49,7 @@ export class UserService {
   }
 
   async getUserByIdUsingRelations(userId: number): Promise<UserEntity> {
-    return this.userRepository.findOne({
+    const foundUser = await this.userRepository.findOne({
       where: {
         id: userId,
       },
@@ -62,6 +61,12 @@ export class UserService {
         },
       },
     });
+
+    if(!foundUser) {
+      throw new NotFoundException(`Usuário com o id ${userId} não foi encontrado`);
+    }
+
+    return foundUser;
   }
 
   async findUserByEmail(email: string): Promise<UserEntity> {
