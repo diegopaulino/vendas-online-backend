@@ -22,8 +22,6 @@ export class AddressService {
     await this.userService.findUserById(userId);
     await this.cityService.findCityById(createAddressDto.cityId);
 
-    console.log('createAddress -> ', userId)
-
     return this.addressRepository.save({
       ...createAddressDto,
       userId,
